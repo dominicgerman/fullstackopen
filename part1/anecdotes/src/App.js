@@ -12,12 +12,26 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(7).fill(0));
+
+  const handleVote = () => {
+    const copy = [...votes];
+    // increment value in selected position by 1
+    copy[selected] += 1;
+    console.log(copy[selected]);
+    console.log(copy);
+    return setVotes(copy);
+  };
+
+  console.log(votes);
   console.log(selected);
 
   return (
     <div>
       <div>{anecdotes[selected]}</div>
-      <button onClick={() => setSelected(Math.floor(Math.random() * 8))}>
+      <div>has {votes[selected]} votes</div>
+      <button onClick={handleVote}>vote</button>
+      <button onClick={() => setSelected(Math.floor(Math.random() * 7))}>
         next anecdote
       </button>
     </div>
