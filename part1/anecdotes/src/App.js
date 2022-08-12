@@ -18,22 +18,27 @@ const App = () => {
     const copy = [...votes];
     // increment value in selected position by 1
     copy[selected] += 1;
-    console.log(copy[selected]);
-    console.log(copy);
     return setVotes(copy);
   };
 
-  console.log(votes);
-  console.log(selected);
+  const mostPopular = () => {
+    const max = Math.max(...votes);
+    const index = votes.indexOf(max);
+    return index;
+  };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <div>has {votes[selected]} votes</div>
       <button onClick={handleVote}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * 7))}>
         next anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      <div>{anecdotes[mostPopular()]}</div>
+      <div>has {votes[mostPopular()]} votes</div>
     </div>
   );
 };
