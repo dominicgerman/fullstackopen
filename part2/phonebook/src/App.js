@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-
-import axios from 'axios';
+import personService from './services/persons';
+import ErrorMsg from './ErrorMsg';
+import SuccessMsg from './SuccessMsg';
 
 const PersonForm = ({
   handleSubmit,
@@ -34,14 +35,11 @@ const Filter = ({ filter, handler }) => {
   );
 };
 
-const Persons = ({ persons }) => {
+const Person = ({ person, deletePerson }) => {
   return (
     <div>
-      {persons.map((person) => (
-        <div key={person.name}>
-          {person.name} <span>{person.number}</span>
-        </div>
-      ))}
+      {person.name} <span>{person.number}</span>
+      <button onClick={deletePerson}>delete</button>
     </div>
   );
 };
@@ -49,19 +47,17 @@ const Persons = ({ persons }) => {
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('a new name...');
-  const [newNumber, setNewNumber] = useState('a new numbahhh...');
+  const [newNumber, setNewNumber] = useState('a new number...');
   const [newFilter, setNewFilter] = useState('');
   const [showAll, setShowAll] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    console.log('effect');
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled');
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
-
-  console.log('render', persons.length, 'persons');
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -73,30 +69,67 @@ const App = () => {
     };
 
     if (!persons.every((el) => el.name !== newName)) {
-      return alert(`${newName} is already added to phonebook`);
+      alert(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      return updateNumber(personObject);
     }
 
-    if (!persons.every((el) => el.number !== newNumber)) {
-      return alert(`${newNumber} is already added to phonebook`);
-    }
+    // if (!persons.every((el) => el.number !== newNumber)) {
+    //   return alert(`${newNumber} is already added to phonebook`);
+    // }
 
-    setPersons(persons.concat(personObject));
-    setNewName('');
-    setNewNumber('');
+    personService.create(personObject).then((returnedPerson) => {
+      setSuccessMessage(`Added ${newName}`);
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+      setPersons(persons.concat(returnedPerson));
+      setNewName('');
+      setNewNumber('');
+    });
+  };
+
+  const updateNumber = (newObject) => {
+    const person = persons.find((p) => p.name === newObject.name);
+    const changedPerson = { ...person, number: newObject.number };
+
+    personService
+      .update(person.id, changedPerson)
+      .then((returnedPerson) => {
+        setPersons(
+          persons.map((p) => (p.id !== changedPerson.id ? p : returnedPerson))
+        );
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => {
+        setErrorMessage(
+          `Information of '${person.name}' has already been removed from server`
+        );
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
+  };
+
+  const deletePerson = (id) => {
+    const person = persons.find((p) => p.id === id);
+
+    window.confirm(`Delete ${person.name}?`);
+    personService.remove(id).then((response) => response);
+    setPersons(persons.filter((p) => p.id !== id));
   };
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const handleFilterChange = (event) => {
-    console.log(event.target.value);
     setNewFilter(event.target.value);
     setShowAll(false);
   };
@@ -110,6 +143,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessMsg message={successMessage} />
+      <ErrorMsg message={errorMessage} />
       <Filter filter={newFilter} handler={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
@@ -120,7 +155,15 @@ const App = () => {
         number={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <div>
+        {personsToShow.map((person) => (
+          <Person
+            key={person.id}
+            person={person}
+            deletePerson={() => deletePerson(person.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
