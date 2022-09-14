@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
-import personService from './services/persons';
-import ErrorMsg from './ErrorMsg';
-import SuccessMsg from './SuccessMsg';
+import { useState } from 'react'
+import { useEffect } from 'react'
+import personService from './services/persons'
+import ErrorMsg from './ErrorMsg'
+import SuccessMsg from './SuccessMsg'
 
 const PersonForm = ({
   handleSubmit,
@@ -23,8 +23,8 @@ const PersonForm = ({
         <button type="submit">add</button>
       </div>
     </form>
-  );
-};
+  )
+}
 
 const Filter = ({ filter, handler }) => {
   return (
@@ -32,8 +32,8 @@ const Filter = ({ filter, handler }) => {
       filter shown with
       <input value={filter} onChange={handler} />
     </div>
-  );
-};
+  )
+}
 
 const Person = ({ person, deletePerson }) => {
   return (
@@ -41,104 +41,112 @@ const Person = ({ person, deletePerson }) => {
       {person.name} <span>{person.number}</span>
       <button onClick={deletePerson}>delete</button>
     </div>
-  );
-};
+  )
+}
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('a new name...');
-  const [newNumber, setNewNumber] = useState('a new number...');
-  const [newFilter, setNewFilter] = useState('');
-  const [showAll, setShowAll] = useState(true);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('a new name...')
+  const [newNumber, setNewNumber] = useState('a new number...')
+  const [newFilter, setNewFilter] = useState('')
+  const [showAll, setShowAll] = useState(true)
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
-      setPersons(initialPersons);
-    });
-  }, []);
+      setPersons(initialPersons)
+    })
+  }, [])
 
   const addPerson = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
-    };
-
-    if (!persons.every((el) => el.name !== newName)) {
-      alert(
-        `${newName} is already added to phonebook, replace the old number with a new one?`
-      );
-      return updateNumber(personObject);
+      // id: persons.length + 1,
     }
+
+    // if (!persons.every((el) => el.name !== newName)) {
+    //   alert(
+    //     `${newName} is already added to phonebook, replace the old number with a new one?`
+    //   );
+    //   return updateNumber(personObject);
+    // }
 
     // if (!persons.every((el) => el.number !== newNumber)) {
     //   return alert(`${newNumber} is already added to phonebook`);
     // }
 
-    personService.create(personObject).then((returnedPerson) => {
-      setSuccessMessage(`Added ${newName}`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 3000);
-      setPersons(persons.concat(returnedPerson));
-      setNewName('');
-      setNewNumber('');
-    });
-  };
-
-  const updateNumber = (newObject) => {
-    const person = persons.find((p) => p.name === newObject.name);
-    const changedPerson = { ...person, number: newObject.number };
-
     personService
-      .update(person.id, changedPerson)
+      .create(personObject)
       .then((returnedPerson) => {
-        setPersons(
-          persons.map((p) => (p.id !== changedPerson.id ? p : returnedPerson))
-        );
-        setNewName('');
-        setNewNumber('');
+        setSuccessMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 3000)
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
       })
       .catch((error) => {
-        setErrorMessage(
-          `Information of '${person.name}' has already been removed from server`
-        );
+        setErrorMessage(`${error.response.data.error}`)
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
-  };
+          setErrorMessage(null)
+        }, 5000)
+      })
+  }
+
+  // const updateNumber = (newObject) => {
+  //   const person = persons.find((p) => p.name === newObject.name);
+  //   const changedPerson = { ...person, number: newObject.number };
+
+  //   personService
+  //     .update(person.id, changedPerson)
+  //     .then((returnedPerson) => {
+  //       setPersons(
+  //         persons.map((p) => (p.id !== changedPerson.id ? p : returnedPerson))
+  //       );
+  //       setNewName('');
+  //       setNewNumber('');
+  //     })
+  //     .catch((error) => {
+  //       setErrorMessage(
+  //         `Information of '${person.name}' has already been removed from server`
+  //       );
+  //       setTimeout(() => {
+  //         setErrorMessage(null);
+  //       }, 5000);
+  //     });
+  // };
 
   const deletePerson = (id) => {
-    const person = persons.find((p) => p.id === id);
+    const person = persons.find((p) => p.id === id)
 
-    window.confirm(`Delete ${person.name}?`);
-    personService.remove(id).then((response) => response);
-    setPersons(persons.filter((p) => p.id !== id));
-  };
+    window.confirm(`Delete ${person.name}?`)
+    personService.remove(id).then((response) => response)
+    setPersons(persons.filter((p) => p.id !== id))
+  }
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
+    setNewName(event.target.value)
+  }
 
   const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  };
+    setNewNumber(event.target.value)
+  }
 
   const handleFilterChange = (event) => {
-    setNewFilter(event.target.value);
-    setShowAll(false);
-  };
+    setNewFilter(event.target.value)
+    setShowAll(false)
+  }
 
   const personsToShow = showAll
     ? persons
     : persons.filter((person) =>
         person.name.toLowerCase().includes(newFilter.toLowerCase())
-      );
+      )
 
   return (
     <div>
@@ -165,7 +173,7 @@ const App = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
