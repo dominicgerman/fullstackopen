@@ -1,4 +1,5 @@
 const express = require('express')
+require('express-async-errors')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
