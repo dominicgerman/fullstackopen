@@ -113,6 +113,37 @@ describe('when deleting/updating an exisitng blog', () => {
   })
 })
 
+describe('when creating a new user', () => {
+  test('users with invalid username are not created', async () => {
+    const usersAtStart = await helper.usersInDb()
+    const invalidUser = {
+      name: 'test',
+      password: 'hithere',
+    }
+
+    await api.post(`/api/users`).send(invalidUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('users with invalid password are not created', async () => {
+    const usersAtStart = await helper.usersInDb()
+    const invalidUser = {
+      username: 'test',
+      name: 'bigjames',
+      password: 'w',
+    }
+
+    await api.post(`/api/users`).send(invalidUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

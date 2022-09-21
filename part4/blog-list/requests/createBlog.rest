@@ -1,7 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdlcm1hbmRvbSIsImlkIjoiNjMyYTU4ZjI0YjdiYzVhMWRlM2FkODUwIiwiaWF0IjoxNjYzNzI1NTE4fQ.Q_bYHJ3dDYFmxqhCq4Ez83G9CEy1AESWFU6fFkcTKmU
 
 {
+    "title": "let's goooooo",
     "author": "yo mama",
-    "likes": 41
-  }
+    "url": "fuckyou.com"
+}
