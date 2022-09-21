@@ -110,9 +110,6 @@ const mostLikes = (array) => {
 
 mostLikes(blogs)
 
-const x = mostLikes(blogs)
-console.log(x)
-
 module.exports = {
   dummy,
   totalLikes,

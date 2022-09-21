@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtvZGF0aGVkb2ciLCJpZCI6IjYzMmIyNmRmMzY3NjZkNzQxNDJlOTZlZCIsImlhdCI6MTY2Mzc3MjQwNiwiZXhwIjoxNjYzNzc2MDA2fQ.YUHtDlpwmt9lsixNsiIs8OTj1rO4-lWa_leCm__cL1w
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtvZGF0aGVkb2ciLCJpZCI6IjYzMmIyNmRmMzY3NjZkNzQxNDJlOTZlZCIsImlhdCI6MTY2Mzc3MzY1MiwiZXhwIjoxNjYzNzc3MjUyfQ.07p9JIDcMhKBwwEAdXO0RHPG-M6DzD1BmcO4KI07VBM
 
 {
-    "title": "I'm still a dog",
+    "title": "I'm just a dog",
     "author": "mister cute",
     "url": "example.com"
 }
