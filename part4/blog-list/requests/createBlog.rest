@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdlcm1hbmRvbSIsImlkIjoiNjMyYTU4ZjI0YjdiYzVhMWRlM2FkODUwIiwiaWF0IjoxNjYzNzI1NTE4fQ.Q_bYHJ3dDYFmxqhCq4Ez83G9CEy1AESWFU6fFkcTKmU
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdlcm1hbmRvbSIsImlkIjoiNjMyYTU4ZjI0YjdiYzVhMWRlM2FkODUwIiwiaWF0IjoxNjYzNzY5Njg5LCJleHAiOjE2NjM3NzMyODl9.jkmZMo_QJqKbs4HeV62JUqHpYfBCVRAe1MJRCeoXusM
 
 {
-    "title": "let's goooooo",
+    "title": "please work",
     "author": "yo mama",
     "url": "fuckyou.com"
 }
