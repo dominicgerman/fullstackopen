@@ -77,7 +77,7 @@ const App = () => {
   }
 
   const deleteBlog = (id) => {
-    window.confirm(`Remove blog?`)
+    window.confirm('Remove blog?')
     blogService
       .remove(id)
       .then(() => {
