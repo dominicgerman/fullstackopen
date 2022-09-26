@@ -97,6 +97,7 @@ const App = () => {
         username
         <input
           type="text"
+          id="username"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
@@ -106,12 +107,15 @@ const App = () => {
         password
         <input
           type="password"
+          id="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button type="submit" id="login-button">
+        login
+      </button>
     </form>
   )
 
@@ -140,12 +144,14 @@ const App = () => {
           </Togglable>
         </div>
       )}
+
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
+            className="blog"
             updateBlog={updateBlog}
             deleteBlog={deleteBlog}
           />
