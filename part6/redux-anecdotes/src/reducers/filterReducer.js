@@ -13,14 +13,5 @@ const filterSlice = createSlice({
   },
 })
 
-// const notificationReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case 'SET_FILTER':
-//       return action.filter
-//     default:
-//       return state
-//   }
-// }
-
 export const { setFilter } = filterSlice.actions
 export default filterSlice.reducer
