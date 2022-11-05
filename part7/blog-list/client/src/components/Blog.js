@@ -1,55 +1,73 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { updateBlog } from '../reducers/blogReducer'
+import { deleteBlog } from '../reducers/blogReducer'
+import { Button } from '@mui/material'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
-  const [visible, setVisible] = useState(false);
+const Blog = () => {
+  const [visible, setVisible] = useState(false)
+
+  const { id } = useParams()
+  const blog = useSelector((state) => state.blogs.find((b) => b.id === id))
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
-  const showWhenVisible = { display: visible ? "" : "none" };
+  const showWhenVisible = {
+    display: visible ? 'flex' : 'none',
+    flexDirection: 'column',
+    alignItems: 'start',
+  }
 
   const toggleVisibility = () => {
-    setVisible(!visible);
-  };
+    setVisible(!visible)
+  }
 
-  const addLike = (blogObj) => {
-    updateBlog(blogObj.id, {
-      title: blogObj.title,
-      author: blogObj.author,
-      url: blogObj.url,
-      likes: blogObj.likes + 1,
-      user: blogObj.user._id,
-    });
-  };
+  const addLike = () => {
+    const { id } = blog
+    console.log(id)
+    dispatch(updateBlog(id, { ...blog, likes: blog.likes + 1 }))
+  }
+
+  const removeBlog = () => {
+    dispatch(deleteBlog(blog))
+    navigate('/blogs')
+  }
 
   return (
     <div style={blogStyle} className="blogDisplay">
       <div>
-        <strong>{blog.title}</strong> by {blog.author}
-        <button onClick={toggleVisibility} className="toggleView">
-          {visible ? "hide" : "view"}
-        </button>
+        <strong>{blog?.title}</strong> by {blog?.author}
+        <Button onClick={toggleVisibility} className="toggleView">
+          {visible ? 'Hide details' : 'View details'}
+        </Button>
       </div>
       <div style={showWhenVisible} className="hiddenByDefault">
-        <div>{blog.url}</div>
-        <div>
-          likes {blog.likes}
-          <button onClick={() => addLike(blog)} className="likeButton">
-            like
-          </button>
-        </div>
-        <div></div>
-        <button onClick={() => deleteBlog(blog.id)} className="removeButton">
-          remove
-        </button>
+        <p>URL: {blog?.url}</p>
+        <p>Likes: {blog?.likes}</p>{' '}
+        <Button
+          color="secondary"
+          variant="outlined"
+          onClick={addLike}
+          className="likeButton"
+        >
+          Like
+        </Button>
+        <Button onClick={removeBlog} className="removeButton">
+          Remove Blog
+        </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

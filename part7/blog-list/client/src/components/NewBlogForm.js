@@ -1,29 +1,36 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { Button } from '@mui/material'
 
-const NewBlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
+const NewBlogForm = () => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    createBlog({
+  const dispatch = useDispatch()
+  const style = { marginBottom: '1rem' }
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-    });
-    setNewTitle("");
-    setNewAuthor("");
-    setNewUrl("");
-  };
+    }
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+    dispatch(createBlog(blogObject))
+  }
 
   return (
     <div>
-      <h2>create new</h2>
+      <h2>Create New Blog</h2>
 
       <form onSubmit={addBlog}>
-        <div>
-          title:
+        <div style={style}>
+          Title:{' '}
           <input
             type="text"
             className="titleInput"
@@ -31,8 +38,8 @@ const NewBlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewTitle(target.value)}
           />
         </div>
-        <div>
-          author:
+        <div style={style}>
+          Author:{' '}
           <input
             type="text"
             className="authorInput"
@@ -40,8 +47,8 @@ const NewBlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewAuthor(target.value)}
           />
         </div>
-        <div>
-          url:
+        <div style={style}>
+          Url:{' '}
           <input
             type="text"
             className="urlInput"
@@ -49,13 +56,14 @@ const NewBlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewUrl(target.value)}
           />
         </div>
-
-        <button type="submit" className="submitButton">
-          create
-        </button>
+        <div style={{ margin: '1rem 0' }}>
+          <Button variant="contained" type="submit" className="submitButton">
+            create
+          </Button>
+        </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default NewBlogForm;
+export default NewBlogForm
