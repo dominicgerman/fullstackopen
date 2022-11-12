@@ -1,9 +1,0 @@
-PUT http://localhost:3003/api/blogs/6323802c744ce7f35d1bd1e2
-Content-Type: application/json
-
-{
-    "title": "what up bitches check out my site yo",
-    "author": "big dom",
-    "url": "http://daphnes.netlify.app",
-    "likes": 41
-}
