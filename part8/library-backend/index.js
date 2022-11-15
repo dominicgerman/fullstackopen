@@ -27,20 +27,6 @@ let authors = [
   },
 ]
 
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
- *
- * Spanish:
- * Podría tener más sentido asociar un libro con su autor almacenando la id del autor en el contexto del libro en lugar del nombre del autor
- * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conección con el libro
- */
-
 let books = [
   {
     title: 'Clean Code',
@@ -98,11 +84,12 @@ const typeDefs = gql`
     name: String!
     id: ID!
     birthYear: Int
+    bookCount: Int
   }
 
   type Book {
     title: String!
-    author: String!
+    author: Author!
     published: Int!
     genres: [String!]!
     id: ID!
@@ -111,7 +98,18 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks: [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
+    allAuthors: [Author]
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+    editAuthor(name: String!, birthYear: Int): Author
   }
 `
 
@@ -119,7 +117,51 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: () => books,
+    allBooks: (root, args) => {
+      if (args.author && args.genre) {
+        return books
+          .filter((b) => b.author == args.author)
+          .filter((b) => b.genres.includes(args.genre))
+      }
+      if (args.author) {
+        return books.filter((b) => b.author === args.author)
+      }
+      if (args.genre) {
+        return books.filter((b) => b.genres.includes(args.genre))
+      }
+      return books
+    },
+    allAuthors: () => authors,
+  },
+
+  Book: {
+    author: (root) => authors.find((a) => a.name === root.author),
+  },
+
+  Author: {
+    bookCount: (root) => books.filter((b) => b.author === root.name).length,
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      const author = authors.find((a) => a.name === args.author)
+      if (!author) {
+        authors = authors.concat({ name: args.author, id: uuid() })
+      }
+      books = books.concat(book)
+      return book
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((a) => a.name === args.name)
+      if (!author) {
+        return null
+      }
+
+      const updatedAuthor = { ...author, birthYear: args.birthYear }
+      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
+      return updatedAuthor
+    },
   },
 }
 
