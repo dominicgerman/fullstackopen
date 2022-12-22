@@ -1,0 +1,18 @@
+{
+  "name": "fitness-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node bmiCalculator.ts",
+    "calculateExercise": "ts-node exerciseCalculator.ts"
+  },
+  "author": "Dominic German",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.17",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
+}

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 
-const Books = ({ show, books, filteredBooks, setGenre }) => {
-  const genres = [...new Set(books.flatMap((b) => b.genres))]
-
-  const [booksToShow, setBooksToShow] = useState(books)
+const Recommended = ({ show, filteredBooks, genre }) => {
+  const [booksToShow, setBooksToShow] = useState(null)
 
   useEffect(() => {
     if (filteredBooks.data) {
@@ -17,8 +15,10 @@ const Books = ({ show, books, filteredBooks, setGenre }) => {
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>recommended</h2>
+      <div>
+        books in your favorite genre <strong>{genre}</strong>
+      </div>
       <table>
         <tbody>
           <tr>
@@ -26,7 +26,7 @@ const Books = ({ show, books, filteredBooks, setGenre }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksToShow.map((a) => (
+          {booksToShow?.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -35,20 +35,8 @@ const Books = ({ show, books, filteredBooks, setGenre }) => {
           ))}
         </tbody>
       </table>
-      <div>
-        {genres.map((g) => (
-          <button
-            onClick={({ target }) => setGenre(target.value)}
-            key={g}
-            value={g}
-          >
-            {g}
-          </button>
-        ))}
-        <button onClick={() => setBooksToShow(books)}>all genres</button>
-      </div>
     </div>
   )
 }
 
-export default Books
+export default Recommended

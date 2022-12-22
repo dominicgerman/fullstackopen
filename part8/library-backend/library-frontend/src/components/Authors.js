@@ -49,7 +49,7 @@ const SetBirthYear = ({ setError, authors }) => {
   )
 }
 
-const Authors = ({ show, setError, authors }) => {
+const Authors = ({ show, setError, authors, token }) => {
   if (!show) {
     return null
   }
@@ -73,7 +73,7 @@ const Authors = ({ show, setError, authors }) => {
           ))}
         </tbody>
       </table>
-      <SetBirthYear authors={authors} setError={setError} />
+      {token ? <SetBirthYear authors={authors} setError={setError} /> : null}
     </div>
   )
 }
