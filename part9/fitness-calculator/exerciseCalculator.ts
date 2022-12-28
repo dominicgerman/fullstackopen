@@ -23,7 +23,7 @@ const calculateExercises = (args: Array<number>): Result => {
   } else if (average < target - 1) {
     rating = 1
   }
-  let ratingDescription
+  let ratingDescription = ''
   if (rating === 1) {
     ratingDescription = 'Not great Bob.'
   }
@@ -48,11 +48,10 @@ const calculateExercises = (args: Array<number>): Result => {
 const parseArgs = (args: Array<string>) => {
   if (args.length < 4) throw new Error('Not enough arguments!')
   if (args.length > 12) throw new Error('Too many arguments!')
+  if (isNaN(Number(args[2])))
+    throw new Error('Provided value for "target" is not a number!')
 
-  let target
-  if (!isNaN(Number(args[2]))) {
-    target = args[2]
-  }
+  let target: number = Number(args[2])
   const values = args.slice(3).map((val) => Number(val))
   values.forEach((num) => {
     if (isNaN(num)) {
@@ -63,7 +62,7 @@ const parseArgs = (args: Array<string>) => {
 }
 
 try {
-  const parsedData = parseArgs(process.argv)
+  const parsedData: Array<number> = parseArgs(process.argv)
   console.log(calculateExercises(parsedData))
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
